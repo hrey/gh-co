@@ -63,6 +63,7 @@ section h3 {
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
+  box-shadow: 0 2px 6px rgba(26, 35, 126, 0.06);
 }
 
 .activity-card h4 {
@@ -72,6 +73,85 @@ section h3 {
 
 .activity-card p {
   margin-bottom: 8px;
+}
+
+.participants-section {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid #e1e7f2;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.participants-section h5 {
+  margin-bottom: 8px;
+  color: #1a237e;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.participants-list {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  color: #45516a;
+  list-style: none;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background-color: #f5f7fc;
+}
+
+.participant-item span {
+  overflow-wrap: anywhere;
+}
+
+.unregister-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #737d90;
+}
+
+.unregister-button:hover:not(:disabled) {
+  border-color: #ffcdd2;
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.unregister-button:focus-visible {
+  outline: 2px solid #5268b8;
+  outline-offset: 2px;
+}
+
+.unregister-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.unregister-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.participants-list .empty-participants {
+  color: #737d90;
+  font-style: italic;
+  padding: 5px 8px;
 }
 
 .form-group {
