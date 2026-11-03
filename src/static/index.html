@@ -3,48 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mergington High School Activities</title>
+    <title>Mergington High School | Enrollment Admin</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
-      <h1>Mergington High School</h1>
-      <h2>Extracurricular Activities</h2>
+    <header class="page-header">
+      <div class="header-inner">
+        <p class="eyebrow">MERGINGTON HIGH SCHOOL <span>/</span> ADMINISTRATION</p>
+        <h1>Club enrollment</h1>
+        <p class="header-subtitle">Review class rosters and remaining capacity.</p>
+      </div>
+      <span class="admin-badge"><span aria-hidden="true"></span> Enrollment admin</span>
     </header>
 
-    <main>
-      <section id="activities-container">
-        <h3>Available Activities</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Loading activities...</p>
+    <main class="dashboard">
+      <section id="activities-container" class="panel table-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">ACTIVITY MANAGEMENT</p>
+            <h2>Class rosters</h2>
+          </div>
+          <span class="table-caption">Current enrollment</span>
+        </div>
+        <div class="table-wrapper">
+          <table id="activities-table">
+            <thead>
+              <tr>
+                <th scope="col">Class</th>
+                <th scope="col">Enrolled students</th>
+                <th scope="col">Seats left</th>
+              </tr>
+            </thead>
+            <tbody id="activities-table-body">
+              <tr><td colspan="3" class="table-state">Loading class rosters…</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
+      <section id="signup-container" class="panel form-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">QUICK ACTION</p>
+            <h2>Enroll a student</h2>
+          </div>
+        </div>
+        <p class="form-intro">Add a student to an extracurricular class.</p>
         <form id="signup-form">
           <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+            <label for="email">Student email</label>
+            <input type="email" id="email" required placeholder="student@mergington.edu" />
           </div>
           <div class="form-group">
-            <label for="activity">Select Activity:</label>
+            <label for="activity">Class</label>
             <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
+              <option value="">Select a class</option>
             </select>
           </div>
-          <button type="submit">Sign Up</button>
+          <button type="submit">Enroll student</button>
         </form>
-        <div id="message" class="hidden"></div>
+        <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+
+        <div class="subform-heading">
+          <p class="eyebrow">CLASS MANAGEMENT</p>
+          <h2>Create a class</h2>
+        </div>
+        <p class="form-intro">Add a class and set its enrollment capacity.</p>
+        <form id="create-class-form">
+          <div class="form-group">
+            <label for="class-name">Class name</label>
+            <input type="text" id="class-name" required maxlength="80" placeholder="e.g. Robotics Club" />
+          </div>
+          <div class="form-group">
+            <label for="class-description">Description</label>
+            <input type="text" id="class-description" required maxlength="200" placeholder="What students will do" />
+          </div>
+          <div class="form-group">
+            <label for="class-schedule">Schedule</label>
+            <input type="text" id="class-schedule" required maxlength="120" placeholder="e.g. Mondays, 3:30 PM" />
+          </div>
+          <div class="form-group">
+            <label for="class-capacity">Maximum students</label>
+            <input type="number" id="class-capacity" required min="1" max="500" value="20" />
+          </div>
+          <button type="submit">Create class</button>
+        </form>
+        <div id="class-message" class="message hidden" role="status" aria-live="polite"></div>
       </section>
     </main>
 
-    <footer>
-      <p>&copy; 2023 Mergington High School</p>
-    </footer>
-
+    <footer>Mergington High School <span>•</span> Activities administration</footer>
     <script src="app.js"></script>
   </body>
 </html>
