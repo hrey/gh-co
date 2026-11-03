@@ -1,91 +1,237 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const activitiesList = document.getElementById("activities-table-body");
-  const activitySelect = document.getElementById("activity");
-  const signupForm = document.getElementById("signup-form");
-  const messageDiv = document.getElementById("message");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
-  async function fetchActivities() {
-    try {
-      const response = await fetch("/activities");
-      const activities = await response.json();
+body {
+  line-height: 1.6;
+  color: #333;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f4f6fb;
+}
 
-      activitiesList.innerHTML = "";
-      activitySelect.querySelectorAll("option:not(:first-child)").forEach((option) => option.remove());
+header {
+  text-align: center;
+  padding: 24px 20px;
+  margin-bottom: 28px;
+  background: linear-gradient(135deg, #1a237e, #2f52b5);
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(26, 35, 126, 0.2);
+}
 
-      Object.entries(activities).forEach(([name, details]) => {
-        const row = document.createElement("tr");
-        const spotsLeft = details.max_participants - details.participants.length;
-        const seatClass = spotsLeft <= 0 ? "seat-full" : spotsLeft <= 3 ? "seat-warning" : "seat-available";
+header h1 {
+  margin-bottom: 8px;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
 
-        const studentList = details.participants.length
-          ? `<ul class="student-list">${details.participants
-              .map((student) => `<li>${student}</li>`)
-              .join("")}</ul>`
-          : '<span class="empty-list">No students enrolled</span>';
+header h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
 
-        row.innerHTML = `
-          <td>
-            <div class="class-meta">
-              <strong>${name}</strong>
-              <span>${details.schedule}</span>
-            </div>
-          </td>
-          <td class="count-cell">${details.participants.length}</td>
-          <td>${studentList}</td>
-          <td><span class="seat-pill ${seatClass}">${spotsLeft}</span></td>
-        `;
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 30px;
+  align-items: start;
+}
 
-        activitiesList.appendChild(row);
+section {
+  min-width: 0;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
 
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
-      });
-    } catch (error) {
-      activitiesList.innerHTML = `<tr><td colspan="4">Failed to load activities. Please try again later.</td></tr>`;
-      console.error("Error fetching activities:", error);
-    }
+section h3 {
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dfe8f5;
+  color: #1a237e;
+  font-size: 1.35rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+#activities-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+#activities-table th,
+#activities-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #edf1f7;
+  text-align: left;
+  vertical-align: top;
+}
+
+#activities-table th {
+  background: #f5f7ff;
+  color: #1a237e;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.class-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.class-meta strong {
+  color: #1f2a44;
+}
+
+.class-meta span {
+  color: #667085;
+  font-size: 0.82rem;
+}
+
+.count-cell {
+  width: 90px;
+  color: #1a237e;
+  font-weight: bold;
+  text-align: center !important;
+}
+
+.student-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.student-list li {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef3ff;
+  color: #1a237e;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.empty-list {
+  color: #7a8297;
+  font-style: italic;
+}
+
+.seat-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.seat-available {
+  background: #e8f8ee;
+  color: #1b7f4a;
+}
+
+.seat-warning {
+  background: #fff5d9;
+  color: #9a6b00;
+}
+
+.seat-full {
+  background: #ffe5e8;
+  color: #b42318;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #1f2a44;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d8dfef;
+  border-radius: 10px;
+  background: white;
+  color: #1f2a44;
+  font-size: 1rem;
+}
+
+button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1a237e, #3949ab);
+  box-shadow: 0 8px 18px rgba(26, 35, 126, 0.18);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+.message {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.success {
+  border: 1px solid #a5d6a7;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.error {
+  border: 1px solid #ef9a9a;
+  background: #ffebee;
+  color: #c62828;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  margin-top: 30px;
+  padding: 20px;
+  color: #667085;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 14px;
   }
 
-  signupForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value;
-    const activity = document.getElementById("activity").value;
-
-    try {
-      const response = await fetch(
-        `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        messageDiv.textContent = result.message;
-        messageDiv.className = "success";
-        signupForm.reset();
-        await fetchActivities();
-      } else {
-        messageDiv.textContent = result.detail || "An error occurred";
-        messageDiv.className = "error";
-      }
-
-      messageDiv.classList.remove("hidden");
-
-      setTimeout(() => {
-        messageDiv.classList.add("hidden");
-      }, 5000);
-    } catch (error) {
-      messageDiv.textContent = "Failed to sign up. Please try again.";
-      messageDiv.className = "error";
-      messageDiv.classList.remove("hidden");
-      console.error("Error signing up:", error);
-    }
-  });
-
-  fetchActivities();
-});
+  section {
+    padding: 16px;
+  }
+}
