@@ -94,7 +94,7 @@ button, input, select { font: inherit; }
   border-bottom: 1px solid #edf0f3;
 }
 
-.panel-heading h2 {
+.panel-heading h2, .subform-heading h2 {
   margin: 4px 0 0;
   color: #243146;
   font-size: 15px;
@@ -191,7 +191,7 @@ button, input, select { font: inherit; }
 .error-text { color: #a9463e !important; }
 
 .form-intro { margin: 0; padding: 15px 18px 0; color: #7c8797; font-size: 11px; }
-#signup-form { padding: 16px 18px 19px; }
+#signup-form, #create-class-form { padding: 16px 18px 19px; }
 .form-group { margin-bottom: 14px; }
 .form-group label { display: block; margin-bottom: 6px; color: #465367; font-size: 11px; font-weight: 700; }
 .form-group input, .form-group select {
@@ -207,7 +207,7 @@ button, input, select { font: inherit; }
 }
 .form-group input:focus, .form-group select:focus { border-color: #6577bd; box-shadow: 0 0 0 3px rgba(70, 91, 174, .1); }
 
-#signup-form button {
+#signup-form button, #create-class-form button {
   width: 100%;
   min-height: 38px;
   border: 0;
@@ -218,8 +218,14 @@ button, input, select { font: inherit; }
   font-weight: 700;
   cursor: pointer;
 }
-#signup-form button:hover:not(:disabled) { background: #293d88; }
-#signup-form button:disabled { cursor: wait; opacity: .65; }
+#signup-form button:hover:not(:disabled), #create-class-form button:hover:not(:disabled) { background: #293d88; }
+#signup-form button:disabled, #create-class-form button:disabled { cursor: wait; opacity: .65; }
+
+.subform-heading {
+  margin-top: 2px;
+  padding: 17px 18px 0;
+  border-top: 1px solid #edf0f3;
+}
 
 .message { margin: 0 18px 17px; padding: 9px 11px; border-radius: 6px; font-size: 11px; }
 .success { border: 1px solid #c8e8d5; background: #f0f8f3; color: #28774e; }

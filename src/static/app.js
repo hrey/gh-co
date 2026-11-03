@@ -4,19 +4,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
   const signupButton = signupForm.querySelector("button[type='submit']");
+  const createClassForm = document.getElementById("create-class-form");
+  const classMessageDiv = document.getElementById("class-message");
+  const createClassButton = createClassForm.querySelector("button[type='submit']");
+
+  function showMessage(element, message, type) {
+    element.textContent = message;
+    element.className = `message ${type}`;
+    element.classList.remove("hidden");
+    setTimeout(() => element.classList.add("hidden"), 5000);
+  }
 
   async function fetchActivities() {
     try {
       const response = await fetch("/activities");
       if (!response.ok) throw new Error("Unable to load activities");
       const activities = await response.json();
-      const entries = Object.entries(activities);
+      const entries = Object.entries(activities).sort(([nameA], [nameB]) =>
+        nameA.localeCompare(nameB, undefined, { sensitivity: "base" })
+      );
 
       activitiesList.replaceChildren();
       activitySelect.querySelectorAll("option:not(:first-child)").forEach((option) => option.remove());
 
       entries.forEach(([name, details]) => {
-        const participants = Array.isArray(details.participants) ? details.participants : [];
+        const participants = (Array.isArray(details.participants) ? details.participants : [])
+          .slice()
+          .sort((emailA, emailB) => emailA.localeCompare(emailB, undefined, { sensitivity: "base" }));
         const capacity = Number(details.max_participants) || 0;
         const seatsLeft = Math.max(0, capacity - participants.length);
         const row = document.createElement("tr");
@@ -89,18 +103,41 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       if (!response.ok) throw new Error(result.detail || "Unable to enroll this student.");
 
-      messageDiv.textContent = result.message || "Student enrolled successfully.";
-      messageDiv.className = "message success";
+      showMessage(messageDiv, result.message || "Student enrolled successfully.", "success");
       signupForm.reset();
       await fetchActivities();
     } catch (error) {
-      messageDiv.textContent = error.message || "Failed to enroll student. Please try again.";
-      messageDiv.className = "message error";
+      showMessage(messageDiv, error.message || "Failed to enroll student. Please try again.", "error");
       console.error("Error enrolling student:", error);
     } finally {
       signupButton.disabled = false;
-      messageDiv.classList.remove("hidden");
-      setTimeout(() => messageDiv.classList.add("hidden"), 5000);
+    }
+  });
+
+  createClassForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    createClassButton.disabled = true;
+
+    const params = new URLSearchParams({
+      activity_name: document.getElementById("class-name").value.trim(),
+      description: document.getElementById("class-description").value.trim(),
+      schedule: document.getElementById("class-schedule").value.trim(),
+      max_participants: document.getElementById("class-capacity").value,
+    });
+
+    try {
+      const response = await fetch(`/activities?${params.toString()}`, { method: "POST" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.detail || "Unable to create class.");
+
+      showMessage(classMessageDiv, result.message || "Class created successfully.", "success");
+      createClassForm.reset();
+      await fetchActivities();
+    } catch (error) {
+      showMessage(classMessageDiv, error.message || "Failed to create class. Please try again.", "error");
+      console.error("Error creating class:", error);
+    } finally {
+      createClassButton.disabled = false;
     }
   });
 

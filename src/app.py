@@ -88,6 +88,30 @@ def get_activities():
     return activities
 
 
+@app.post("/activities")
+def create_activity(activity_name: str, description: str, schedule: str, max_participants: int):
+    """Create a new extracurricular activity."""
+    activity_name = activity_name.strip()
+    if not activity_name:
+        raise HTTPException(status_code=400, detail="Class name is required")
+    if any(existing_name.casefold() == activity_name.casefold() for existing_name in activities):
+        raise HTTPException(status_code=409, detail="A class with this name already exists")
+    if not description.strip():
+        raise HTTPException(status_code=400, detail="Description is required")
+    if not schedule.strip():
+        raise HTTPException(status_code=400, detail="Schedule is required")
+    if max_participants < 1:
+        raise HTTPException(status_code=400, detail="Maximum students must be at least 1")
+
+    activities[activity_name] = {
+        "description": description.strip(),
+        "schedule": schedule.strip(),
+        "max_participants": max_participants,
+        "participants": []
+    }
+    return {"message": f"Created class {activity_name}"}
+
+
 @app.post("/activities/{activity_name}/signup")
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
@@ -96,9 +120,6 @@ def signup_for_activity(activity_name: str, email: str):
         raise HTTPException(status_code=404, detail="Activity not found")
 
     # Get the specific activity
-    activity = activities[activity_name]
-
-    #Get the specific activity
     activity = activities[activity_name]
 
     #Validate student is not already signed up
